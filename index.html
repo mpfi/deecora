@@ -1,0 +1,71 @@
+<!DOCTYPE html>  
+<html> 
+<head> 
+<meta charset="UTF-8">
+<title>SVGTest</title>
+<link rel="stylesheet" href="css/main.css">
+<script src="js/chroma.min.js"></script>
+</head>
+<body>
+<h1>SVG Test</h1>
+
+<div id="origsvg">
+	<!-- This is an HTML div, and inside goes the SVG -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="100px" heihgt="100px">
+    <circle r="50" cx="50" cy="50" fill="green"/>
+  </svg>
+</div>
+<!--sliders-->
+		<ul id="sliders" style="display:">
+		<form oninput="amount.value=rangeInput.value"> hue min
+			<input type="range" id="huemin" value="0" name="rangeInput" min="0" max="360">                                                       
+
+			<output name="amount" for="rangeInput">0</output>
+        </form>
+		<form oninput="amount.value=rangeInput.value"> hue max
+			<input type="range" id="huemax" value="360" name="rangeInput" min="0" max="360">                                                       
+
+			<output name="amount" for="rangeInput">0</output>
+        </form>
+		<form oninput="amount.value=rangeInput.value"> sat min %
+			<input type="range" id="satmin" value="0" name="rangeInput" min="0" max="100">                                                       
+
+			<output name="amount" for="rangeInput">0</output>
+        </form>
+		<form oninput="amount.value=rangeInput.value"> sat max %
+			<input type="range" id="satmax" value="100" name="rangeInput" min="0" max="100">                                                       
+
+			<output name="amount" for="rangeInput">0</output>
+        </form>
+		<form oninput="amount.value=rangeInput.value"> lumo min %
+			<input type="range" id="lumin" value="0" name="rangeInput" min="0" max="100">                                                       
+
+			<output name="amount" for="rangeInput">0</output>
+        </form>
+		<form oninput="amount.value=rangeInput.value"> lumo max %
+			<input type="range" id="lumax" value="100" name="rangeInput" min="0" max="100">                                                       
+
+			<output name="amount" for="rangeInput">0</output>
+        </form>
+		</ul>
+		 <form>
+<br>
+<br>
+
+<button id="bCreateCopies"> Create Copies</button>
+<input id="nrOfCopies" type="number" min="1" value="4" max="10" step="1"/>
+<button id="bRandomcolors"> randomize colors</button>
+<br>
+<br>
+
+<div id="copy_svg" class="table">
+	<div class="row">
+	   <div id="dest_clone" class="leftflow">
+	   </div>
+	</div>
+</div>
+
+<script src="js/main.js"></script>
+
+</body>
+</html> 

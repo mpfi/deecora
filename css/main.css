@@ -1,0 +1,18 @@
+
+
+.leftflow {
+  float: left;
+}
+
+h1 {
+text-align: center;
+}
+
+body {
+    background-color: gainsboro;
+}
+
+p {
+    font-family: "Arial";
+    font-size: 16px;
+}
