@@ -104,27 +104,55 @@ window.onload = function() {
       };
 
     }
-	
-		
+	//Usercolor is not defined
+	/*
+	function usercolor(element) { //on change function for color pickers, id of picker = element=path1svgnr1  list id = "list"+ svgcounter;
+		var pathname = element.slice(0,5);
+		var childofsvg = element.slice(5,11).replace("svgnr", "list");
+		var svgDoc = document.getElementById(childofsvg).parentNode; //element is 0
+		var newcolor = document.getElementById(element).value;
+		var svgItem = svgDoc.getElementById(pathname);
+		svgItem.style.fill = newcolor;
+	//document.getElementById("list1").parentNode.getElementById("path1").style.fill = document.getElementById("path1svgnr1").value;
+	}	
+	*/
 	//Randomize colors
 	
-	function randomcolors(){
+	function randomcolors(){ /*patharray drawing.svg = ["path1", "path2", "path3", "path5"]; */
 	//Make array of pathnames, checks only from 0 to 100
-	function fillpatharray(){ 
-	var fi = 0;
-	var arraypath;
-	var arraypos =0;
-	while (fi < 100) {
-			arraypath = "path" + fi.toString();
-			//only get path if path exists, else skip
-			if(el.getElementById(arraypath) != null){ //el is sourceSVG from randomcolors()
+		function fillpatharray(){ 
+			var fi = 0;
+			var arraypath;
+			var arraypos =0;
+			while (fi < 100) {
+					arraypath = "path" + fi.toString();
+					//only get path if path exists, else skip
+					if(el.getElementById(arraypath) != null){ //el is sourceSVG from randomcolors()
 						patharray[arraypos]=arraypath;
 						arraypos++;
-			}
+					}
 			fi++;
 			}
-		/*patharray = ["path1", "path2", "path3", "path5"]; */
-	}	
+		
+		}	
+		function makecolorpickers(){ //make color picker list 
+			var getcolor; 
+			var input; 
+			patharray.forEach(function(entry){
+				getcolor = cel.getElementById(entry).style.fill;
+				input = document.createElement("input"); //input type color
+				input.type = "color";
+				input.value = chroma.hex(getcolor);
+				input.id = patharray[entry]+"svgnr"+svgcounter;
+				input.setAttribute("onchange", "usercolor(this.id)");
+				//TODO ist ul mit child input, sollte? ul mit child li mit child input sein?
+				document.getElementById("list"+ svgcounter).appendChild(input);
+			});
+		}
+		//counter for IDs for colorpickers
+		var svgcounter=1;
+		//list element to add colorpickers to
+		var list;
       //Source
       var el = document.getElementById("origsvg").firstChild;
       //Clone Variable
@@ -135,6 +163,8 @@ window.onload = function() {
 	  var colorpath;
 	  //get list of existing path ids
 	  fillpatharray();
+	  //delete list ID counter
+	  svgcounter=1;
       //Delete All nested elements
       while (pdest.firstChild) {
         pdest.removeChild(pdest.firstChild);
@@ -153,6 +183,11 @@ window.onload = function() {
 		});
 		
         pdest.appendChild(cel);
+		list = document.createElement("UL"); 
+		list.id = "list"+ svgcounter;
+		pdest.appendChild(list);
+		makecolorpickers();
+		svgcounter ++;
       };
 
     }
@@ -172,6 +207,19 @@ window.onload = function() {
          randomcolors()
 
     };
+	
+	
+	
+	//TODO convert
+	function buttonActionUsercolor() { 
+	//var pathname = element.slice(0,5); //element = patharray[entry]+"svgnr"+svgcounter
+	//var bildname = element.slice(5,10);
+	//var ucolsvgDoc = document.getElementById("list1").parentNode;
+	//x is new value of colorpicker
+    //var ucolsvgItem = document.getElementById("list1").parentNode.getElementById("path1");
+	document.getElementById("list1").parentNode.getElementById("path1").style.fill = document.getElementById("path1svgnr1").value;
+	
+}
 
     // Event-Listeners
 
@@ -187,7 +235,14 @@ window.onload = function() {
     } else {
         bEl.attachEvent("click", buttonActionRandomcolors);
     }
-
+	/* evetlistener geht nicht weil svg noch nicht existiert
+	bEl = document.getElementById("path1svgnr1"); // input id patharray[entry]+"svgnr"+svgcounter
+    if(bEl.addEventListener){
+                 bEl.addEventListener("click", buttonActionUsercolor);
+    } else {
+        bEl.attachEvent("click", buttonActionUsercolor);
+    }
+	*/
     // Start here
     loadimage();
 	
