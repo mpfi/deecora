@@ -14,26 +14,7 @@ window.onload = function() {
 		patharray=[];
 
     // Functions
-	//Make array of pathnames, checks only from 0 to 100
-	function fillpatharray(){ 
-	/*var fi = 0;
-	var arraypath;
-	var arraypos =0;
 	
-	var fillsvg = document.getElementById("origsvg").firstChild;
-	alert(fillsvg.getElementById("path1").style.fill);
-	while (fi < 100) {
-			arraypath = "path" + fi.toString();
-			//only get path if path exists, else skip
-			if(fillsvg.getElementById(arraypath) != null){
-						patharray[arraypos]=arraypath;
-						arraypos++;
-			}
-			fi++;
-			}
-		*/
-		patharray = ["path1", "path2", "path3", "path5"]; 
-	}
 	//fetch random rgb color
 	 function randomrgb(){ //output: rgb(r,g,b)  huemin etc from sliders
 		var hmin = document.getElementById("huemin").value;
@@ -128,7 +109,22 @@ window.onload = function() {
 	//Randomize colors
 	
 	function randomcolors(){
-
+	//Make array of pathnames, checks only from 0 to 100
+	function fillpatharray(){ 
+	var fi = 0;
+	var arraypath;
+	var arraypos =0;
+	while (fi < 100) {
+			arraypath = "path" + fi.toString();
+			//only get path if path exists, else skip
+			if(el.getElementById(arraypath) != null){ //el is sourceSVG from randomcolors()
+						patharray[arraypos]=arraypath;
+						arraypos++;
+			}
+			fi++;
+			}
+		/*patharray = ["path1", "path2", "path3", "path5"]; */
+	}	
       //Source
       var el = document.getElementById("origsvg").firstChild;
       //Clone Variable
@@ -137,6 +133,8 @@ window.onload = function() {
       var pdest = document.getElementById("dest_clone");
 	  //colorpath
 	  var colorpath;
+	  //get list of existing path ids
+	  fillpatharray();
       //Delete All nested elements
       while (pdest.firstChild) {
         pdest.removeChild(pdest.firstChild);
@@ -150,7 +148,7 @@ window.onload = function() {
       for (var i = cnum; i > 0; i--) {
         cel = el.cloneNode(true);
 		patharray.forEach(function(entry){
-			colorpath = el.getElementById(entry);
+			colorpath = cel.getElementById(entry);
 			colorpath.style.fill = randomrgb();
 		});
 		
@@ -192,6 +190,6 @@ window.onload = function() {
 
     // Start here
     loadimage();
-	fillpatharray();
+	
   })();
 };
