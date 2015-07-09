@@ -11,22 +11,24 @@ window.onload = function() {
         bEl, // tmp Button Element Variable can be used several times
         buttonActionCreateCopies,
 		buttonActionRandomcolors,
+		buttonActionUsercolor,
+		buttonActionNewTab,
 		patharray=[];
 
     // Functions
 	
 	//fetch random rgb color
 	 function randomrgb(){ //output: rgb(r,g,b)  huemin etc from sliders
-		var hmin = document.getElementById("huemin").value;
-		var hmax = document.getElementById("huemax").value;
-		var smin = document.getElementById("satmin").value;
-		var smax = document.getElementById("satmax").value;
-		var lmin = document.getElementById("lumin").value;
-		var lmax = document.getElementById("lumax").value;
+		//var hmin = document.getElementById("huemin").value;
+		//var hmax = document.getElementById("huemax").value;
+		//var smin = document.getElementById("satmin").value;
+		//var smax = document.getElementById("satmax").value;
+		//var lmin = document.getElementById("lumin").value;
+		//var lmax = document.getElementById("lumax").value;
 	
-		var hue = getRandomInt(hmin, hmax);
-		var sat = getRandom(smin/100, smax/100);
-		var light = getRandom(lmin/100, lmax/100);
+		var hue = getRandomInt(document.getElementById("huemin").value, document.getElementById("huemax").value);
+		var sat = getRandom(document.getElementById("satmin").value/100, document.getElementById("satmax").value/100);
+		var light = getRandom(document.getElementById("lumin").value/100, document.getElementById("lumax").value/100);
 		var col = chroma.hsl(hue, sat, light);
 	
 		return "rgb(" + col.rgb() + ")";
@@ -119,8 +121,8 @@ window.onload = function() {
 	//Randomize colors
 	
 	function randomcolors(){ /*patharray drawing.svg = ["path1", "path2", "path3", "path5"]; */
-	//Make array of pathnames, checks only from 0 to 100
-		function fillpatharray(){ 
+	
+		function fillpatharray(){ //Make array of pathnames, checks only from 0 to 100
 			var fi = 0;
 			var arraypath;
 			var arraypos =0;
@@ -191,6 +193,15 @@ window.onload = function() {
       };
 
     }
+	
+	function show_svg() { //opens either svg or colorpicker in new tab. svg when in "quantity" odd number 
+    var serializer = new XMLSerializer();
+    var svg_blob = new Blob([serializer.serializeToString(document.getElementById("list1").parentNode.childNodes[document.getElementById("nrOfCopies").value-1])],
+                            {'type': "image/svg+xml"});
+    var url = URL.createObjectURL(svg_blob);
+
+    var svg_win = window.open(url, "svg_win");
+      }
   	 
 
     // Callback-Functions
@@ -207,7 +218,11 @@ window.onload = function() {
          randomcolors()
 
     };
-	
+	buttonActionNewTab=function(event){
+      if ( event.preventDefault ) { event.preventDefault();}
+         event.returnValue = false;  
+         show_svg()
+    };
 	
 	
 	//TODO convert
@@ -234,6 +249,12 @@ window.onload = function() {
                  bEl.addEventListener("click", buttonActionRandomcolors);
     } else {
         bEl.attachEvent("click", buttonActionRandomcolors);
+    }
+	bEl = document.getElementById("bNewTab");
+    if(bEl.addEventListener){
+                 bEl.addEventListener("click", buttonActionNewTab);
+    } else {
+        bEl.attachEvent("click", buttonActionNewTab);
     }
 	/* evetlistener geht nicht weil svg noch nicht existiert
 	bEl = document.getElementById("path1svgnr1"); // input id patharray[entry]+"svgnr"+svgcounter

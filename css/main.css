@@ -6,6 +6,7 @@
 
 h1 {
 text-align: center;
+    font-family: "Arial";
 }
 
 body {
@@ -15,4 +16,19 @@ body {
 p {
     font-family: "Arial";
     font-size: 16px;
+}
+
+#huemin {
+-webkit-appearance: none;
+-webkit-border-radius: 3px;
+background-image: url('/infoprojektfiles/deecora/media/slider.jpg');
+width:47%;
+height: 5px;
+}
+#huemax {
+-webkit-appearance: none;
+-webkit-border-radius: 3px;
+background-image: url('/infoprojektfiles/deecora/media/slider.jpg');
+width:47%;
+height: 5px;
 }
