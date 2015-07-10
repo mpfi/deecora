@@ -21,14 +21,14 @@ p {
 #huemin {
 -webkit-appearance: none;
 -webkit-border-radius: 3px;
-background-image: url('/infoprojektfiles/deecora/media/slider.jpg');
+background-image: url('../media/slider.jpg');
 width:380px;
 height: 5px;
 }
 #huemax {
 -webkit-appearance: none;
 -webkit-border-radius: 3px;
-background-image: url('/infoprojektfiles/deecora/media/slider.jpg');
+background-image: url('../media/slider.jpg');
 width:380px;
 height: 5px;
 }
