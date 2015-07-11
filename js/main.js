@@ -8,7 +8,8 @@ window.onload = function() {
     'use strict';
     
     // VAR
-    var xhr=null,  
+    var xhr=null,  //multiples, 1 for each file to load
+		xhr2 =null, xhr3=null, xhr4=null,
         bEl, // tmp Button Element Variable can be used several times
         buttonActionCreateCopies,
 		buttonActionRandomcolors,
@@ -19,15 +20,8 @@ window.onload = function() {
 
     // Functions
 	
-	//fetch random rgb color
-	 function randomrgb(){ //output: rgb(r,g,b)  huemin etc from sliders
-		//var hmin = document.getElementById("huemin").value;
-		//var hmax = document.getElementById("huemax").value;
-		//var smin = document.getElementById("satmin").value;
-		//var smax = document.getElementById("satmax").value;
-		//var lmin = document.getElementById("lumin").value;
-		//var lmax = document.getElementById("lumax").value;
-	
+	//fetch random rgb color using hsl sliders
+	 function randomrgb(){
 		var hue = getRandomInt(document.getElementById("huemin").value, document.getElementById("huemax").value);
 		var sat = getRandom(document.getElementById("satmin").value/100, document.getElementById("satmax").value/100);
 		var light = getRandom(document.getElementById("lumin").value/100, document.getElementById("lumax").value/100);
@@ -35,7 +29,6 @@ window.onload = function() {
 	
 		return "rgb(" + col.rgb() + ")";
 	}
-	
 
 	// returns a random int between min and max
 	function getRandomInt(min, max) {
@@ -50,22 +43,20 @@ window.onload = function() {
 	function getRandom(min, max) {
 		return Math.random() * (max - min) + min; 
 	}
-	
 	 
     // Load Image with AjAX
     // TODO Choose which SVG File to load from server
     // LATER TODO upload possibility to server
-    function loadimage() {
+    function loadimage(filename, imagecount) {  //loadimage("media/drawing.svg",1);
      // Singleton only one xhr Element
-     if (xhr === null){
+    // if (xhr === null){
   	   xhr = new XMLHttpRequest();
-     }
-
+    // }
 	 
      //callback after AJAX worked
      xhr.onreadystatechange=function(){
       if((xhr.readyState==4)&&(xhr.status==200)){
-         var el = document.getElementById("origsvg");
+         var el = document.getElementById("origsvg"+imagecount);
          while (el.firstChild) {
            el.removeChild(el.firstChild);
          }
@@ -73,15 +64,73 @@ window.onload = function() {
       }
      };
 
-  	 xhr.open("GET","media/drawing.svg");
+  	 xhr.open("GET",filename);
   	 // Following line is just to be on the safe side;
   	 // not needed if your server delivers SVG with correct MIME type
-  	 
      xhr.overrideMimeType("image/svg+xml");
-  	 
      xhr.send("");
     }
+	function loadimages() {
+     // Singleton only one xhr Element
+    if (xhr === null){
+  	   xhr = new XMLHttpRequest();
+    }
+    //callback after AJAX worked
+    xhr.onreadystatechange=function(){
+		if((xhr.readyState==4)&&(xhr.status==200)){
+			var el = document.getElementById("origsvg1");
+			while (el.firstChild) {
+				el.removeChild(el.firstChild);
+			}
+        el.appendChild(xhr.responseXML.documentElement);
+		}
+    };
 
+  	xhr.open("GET","media/drawing.svg");
+  	// Following line is just to be on the safe side;
+  	// not needed if your server delivers SVG with correct MIME type
+    xhr.overrideMimeType("image/svg+xml");
+    xhr.send("");
+	/////////###################copy start
+  	xhr2 = new XMLHttpRequest();
+	xhr2.onreadystatechange=function(){
+		if((xhr2.readyState==4)&&(xhr.status==200)){
+			var el2 = document.getElementById("origsvg2");
+			while (el2.firstChild) {
+				el2.removeChild(el2.firstChild);
+			}
+        el2.appendChild(xhr2.responseXML.documentElement);
+		}
+    };
+  	xhr2.open("GET","media/colibrisimple.svg");
+    xhr2.send("");
+	xhr3 = new XMLHttpRequest();
+	xhr3.onreadystatechange=function(){
+		if((xhr3.readyState==4)&&(xhr.status==200)){
+			var el3 = document.getElementById("origsvg3");
+			while (el3.firstChild) {
+				el3.removeChild(el3.firstChild);
+			}
+        el3.appendChild(xhr3.responseXML.documentElement);
+		}
+    };
+  	xhr3.open("GET","media/bird.svg");
+    xhr3.send("");
+	xhr4 = new XMLHttpRequest();
+	xhr4.onreadystatechange=function(){
+		if((xhr4.readyState==4)&&(xhr.status==200)){
+			var el4 = document.getElementById("origsvg4");
+			while (el4.firstChild) {
+				el4.removeChild(el4.firstChild);
+			}
+        el4.appendChild(xhr4.responseXML.documentElement);
+		}
+    };
+  	xhr4.open("GET","media/colibri.svg");
+    xhr4.send("");
+	//////////##################copy end
+    }
+		
     //Function cloneSVG 
     //cloneSVG tree
     function cloneSVG(){
@@ -126,7 +175,7 @@ window.onload = function() {
         } else {
           input.attachEvent("change", colorbuttonhandler);
         }
-        //TODO ist ul mit child input, sollte? ul mit child li mit child input sein?
+        //list element gets added to ul element from randomcolors()
 		liEl = document.createElement("LI");
 		document.getElementById("list"+cel.id).appendChild(liEl);
         liEl.appendChild(input);
@@ -151,12 +200,12 @@ window.onload = function() {
     } 
 
 	//Randomize colors
-	function randomcolors(){ /*patharray drawing.svg = ["path1", "path2", "path3", "path5"]; */
+	function randomcolors(target){ /*patharray drawing.svg = ["path1", "path2", "path3", "path5"]; */
 		'use strict';
 		//list element to add colorpickers to
 		var list;
 		//Source
-		var el = document.getElementById("origsvg").firstChild;
+		var el = document.getElementById("origsvg"+target).firstChild;
 		//Clone Variable
 		var cel = null;
 		//Append Clone
@@ -167,7 +216,7 @@ window.onload = function() {
 		var cnumEl;
 		// value of this element
 		var cnum;
-		//div capsules for (svg and colorpicker) and (colorpicker)
+		//div capsules: [(svg  (colorpicker)) (svg (colorpicker)) ....]
 		var svgdiv;
 		var inputdiv;
 		//get list of existing path ids
@@ -221,7 +270,7 @@ window.onload = function() {
 	buttonActionRandomcolors=function(event){
       if ( event.preventDefault ) { event.preventDefault();}
          event.returnValue = false;  
-         randomcolors();
+         randomcolors(document.getElementById("target").value);
     };
 	buttonActionNewTab=function(event){
       if ( event.preventDefault ) { event.preventDefault();}
@@ -255,7 +304,8 @@ window.onload = function() {
         bEl.attachEvent("click", buttonActionNewTab);
     }
     // Start here
-    loadimage();
+	loadimages();
+	
 	
   })();
 };

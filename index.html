@@ -9,12 +9,32 @@
 <body>
 <h1>SVG Test</h1>
 
-<div id="origsvg">
+<div id="origsvg1" class="leftflow">
 	<!-- This is an HTML div, and inside goes the SVG -->
   <svg xmlns="http://www.w3.org/2000/svg" width="100px" heihgt="100px">
     <circle r="50" cx="50" cy="50" fill="green"/>
   </svg>
 </div>
+<div id="origsvg2" class="leftflow">
+	<!-- This is an HTML div, and inside goes the SVG -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="10px" heihgt="10px">
+    <circle r="10" cx="10" cy="50"/>
+  </svg>
+</div>
+<div id="origsvg3" class="leftflow">
+	<!-- This is an HTML div, and inside goes the SVG -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="10px" heihgt="10px">
+    <circle r="10" cx="10" cy="50"/>
+  </svg>
+</div>
+<div id="origsvg4" class="leftflow">
+	<!-- This is an HTML div, and inside goes the SVG -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="10px" heihgt="10px">
+    <circle r="10" cx="10" cy="50"/>
+  </svg>
+</div>
+<br style="clear:both" />
+<input id="target" type="number" min="1" value="1" max="4" step="1"/>
 <!--sliders-->
 		<ul id="sliders" style="display:">
 		<form oninput="amount.value=rangeInput.value"> hue min
@@ -49,6 +69,7 @@
         </form>
 		</ul>
 		 <form>
+		 
 <br>
 <br>
 
