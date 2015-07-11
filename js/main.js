@@ -14,7 +14,7 @@ window.onload = function() {
 		buttonActionRandomcolors,
 		buttonActionUsercolor,
 		buttonActionNewTab,
-    colorbuttonhandler,
+		colorbuttonhandler,
 		patharray=[];
 
     // Functions
@@ -43,7 +43,7 @@ window.onload = function() {
 		var maximum = parseInt(max);
 		var randomeins = Math.round(Math.random() * (maximum - minimum)); //did not work when not split up
 		var randomzwei = randomeins + minimum;
-	return randomzwei;
+		return randomzwei;
 	}
 
 	// returns a random float number between min and max
@@ -108,24 +108,13 @@ window.onload = function() {
       };
 
     }
-	//Usercolor is not defined
-	/*
-	function usercolor(element) { //on change function for color pickers, id of picker = element=path1svgnr1  list id = "list"+ svgcounter;
-		var pathname = element.slice(0,5);
-		var childofsvg = element.slice(5,11).replace("svgnr", "list");
-		var svgDoc = document.getElementById(childofsvg).parentNode; //element is 0
-		var newcolor = document.getElementById(element).value;
-		var svgItem = svgDoc.getElementById(pathname);
-		svgItem.style.fill = newcolor;
-	//document.getElementById("list1").parentNode.getElementById("path1").style.fill = document.getElementById("path1svgnr1").value;
-	}	
-	*/
 	
   function makecolorpickers(cel){ //make color picker list 
-      var getcolor; 
-      var input; 
-      patharray.forEach(function(entry){
-        getcolor = cel.getElementById(entry).style.fill;
+    var getcolor; 
+    var input;
+	var liEl;	
+    patharray.forEach(function(entry){
+		getcolor = cel.getElementById(entry).style.fill;
         input = document.createElement("input"); //input type color
         input.type = "color";
         input.value = chroma.hex(getcolor);
@@ -137,10 +126,10 @@ window.onload = function() {
         } else {
           input.attachEvent("change", colorbuttonhandler);
         }
-
-        //input.setAttribute("onchange", "usercolor(this.id)");
         //TODO ist ul mit child input, sollte? ul mit child li mit child input sein?
-        document.getElementById("list"+ cel.id).appendChild(input);
+		liEl = document.createElement("LI");
+		document.getElementById("list"+cel.id).appendChild(liEl);
+        liEl.appendChild(input);
       });
     }
 
@@ -159,69 +148,66 @@ window.onload = function() {
       fi++;
       }
       return tmp;
-    
     } 
 
-  //Randomize colors
-	
+	//Randomize colors
 	function randomcolors(){ /*patharray drawing.svg = ["path1", "path2", "path3", "path5"]; */
-	'use strict';
+		'use strict';
+		//list element to add colorpickers to
+		var list;
+		//Source
+		var el = document.getElementById("origsvg").firstChild;
+		//Clone Variable
+		var cel = null;
+		//Append Clone
+		var pdest = document.getElementById("dest_clone");
+		//colorpath
+		var colorpath;
+		// html-form element of nr copy field
+		var cnumEl;
+		// value of this element
+		var cnum;
+		//div capsules for (svg and colorpicker) and (colorpicker)
+		var svgdiv;
+		var inputdiv;
+		//get list of existing path ids
+		patharray=fillpatharray(el);
+		//Delete All nested elements
+		while (pdest.firstChild) {
+		  pdest.removeChild(pdest.firstChild);
+		}
+		// Get Nr of copies to do
+		cnumEl = document.getElementById("nrOfCopies");
+		cnum  = parseInt(cnumEl.value);
 
-  //counter for IDs for colorpickers
-    //var svgcounter=1;
-    //list element to add colorpickers to
-    var list;
-    //Source
-    var el = document.getElementById("origsvg").firstChild;
-    //Clone Variable
-    var cel = null;
-    //Append Clone
-    var pdest = document.getElementById("dest_clone");
-    //colorpath
-    var colorpath;
-    // html-form element of nr copy field
-    var cnumEl;
-    // value of this element
-    var cnum;
-
-    //get list of existing path ids
-	  patharray=fillpatharray(el);
-	  //delete list ID counter
-	  //svgcounter=1;
-    //Delete All nested elements
-    while (pdest.firstChild) {
-      pdest.removeChild(pdest.firstChild);
+		//insert nested cloned copy
+		for (var i = cnum; i > 0; i--) {
+			cel = el.cloneNode(true);
+			cel.id = "clone"+i;
+			patharray.forEach(function(entry){
+				colorpath = cel.getElementById(entry);
+				colorpath.style.fill = randomrgb();
+			});
+			inputdiv = document.createElement("div");  //div for colorpickers to have them besides svg
+			inputdiv.className = "leftflow";
+			svgdiv = document.createElement("div");  //div for svg and inputdiv to keep svg besides its colorpickers
+			svgdiv.className = "leftflow";
+			pdest.appendChild(svgdiv);
+			svgdiv.appendChild(cel);
+			svgdiv.appendChild(inputdiv);
+			list = document.createElement("UL"); //ul-element for list of inputs created in makecolorpickers
+			list.id = "list"+ cel.id;
+			inputdiv.appendChild(list);
+			makecolorpickers(cel);
+		};
+	}
+	//opens colorpicker in new tab
+	function show_svg(cloneID) {  
+		var serializer = new XMLSerializer();
+		var svg_blob = new Blob([serializer.serializeToString(document.getElementById(cloneID))],{'type': "image/svg+xml"});
+		var url = URL.createObjectURL(svg_blob);
+		var svg_win = window.open(url, "svg_win");
     }
-    // Get Nr of copies to do
-    cnumEl = document.getElementById("nrOfCopies");
-    cnum  = parseInt(cnumEl.value);
-
-    //insert nested cloned copy
-
-    for (var i = cnum; i > 0; i--) {
-      cel = el.cloneNode(true);
-      cel.id = "clone"+i;
-		  patharray.forEach(function(entry){
-			  colorpath = cel.getElementById(entry);
-			  colorpath.style.fill = randomrgb();
-		  });
-      pdest.appendChild(cel);
-		  list = document.createElement("UL"); 
-		  list.id = "list"+ cel.id;
-		  pdest.appendChild(list);
-		  makecolorpickers(cel);
-		//svgcounter ++;
-    };
-  }
-	
-	function show_svg() { //opens either svg or colorpicker in new tab. svg when in "quantity" odd number 
-    var serializer = new XMLSerializer();
-    var svg_blob = new Blob([serializer.serializeToString(document.getElementById("list1").parentNode.childNodes[document.getElementById("nrOfCopies").value-1])],
-                            {'type': "image/svg+xml"});
-    var url = URL.createObjectURL(svg_blob);
-
-    var svg_win = window.open(url, "svg_win");
-      }
   	 
 
     // Callback-Functions
@@ -236,33 +222,17 @@ window.onload = function() {
       if ( event.preventDefault ) { event.preventDefault();}
          event.returnValue = false;  
          randomcolors();
-
     };
 	buttonActionNewTab=function(event){
       if ( event.preventDefault ) { event.preventDefault();}
          event.returnValue = false;  
-         show_svg();
+         show_svg("clone"+document.getElementById("nrOfCopies").value);
     };
     colorbuttonhandler=function(event){
       var tmp = event.target.id.split("_");
       // 1 SVG ID , 0 Path ID
       document.getElementById(tmp[1]).getElementById(tmp[0]).style.fill=event.target.value;
- 
-      alert(tmp);
-      alert(event.target);
     };
-	
-	
-	//TODO convert
-	function buttonActionUsercolor() { 
-	//var pathname = element.slice(0,5); //element = patharray[entry]+"svgnr"+svgcounter
-	//var bildname = element.slice(5,10);
-	//var ucolsvgDoc = document.getElementById("list1").parentNode;
-	//x is new value of colorpicker
-    //var ucolsvgItem = document.getElementById("list1").parentNode.getElementById("path1");
-	document.getElementById("list1").parentNode.getElementById("path1").style.fill = document.getElementById("path1svgnr1").value;
-	
-}
 
     // Event-Listeners
 
@@ -284,14 +254,6 @@ window.onload = function() {
     } else {
         bEl.attachEvent("click", buttonActionNewTab);
     }
-	/* evetlistener geht nicht weil svg noch nicht existiert
-	bEl = document.getElementById("path1svgnr1"); // input id patharray[entry]+"svgnr"+svgcounter
-    if(bEl.addEventListener){
-                 bEl.addEventListener("click", buttonActionUsercolor);
-    } else {
-        bEl.attachEvent("click", buttonActionUsercolor);
-    }
-	*/
     // Start here
     loadimage();
 	

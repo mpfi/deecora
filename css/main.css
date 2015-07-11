@@ -32,3 +32,12 @@ background-image: url('../media/slider.jpg');
 width:380px;
 height: 5px;
 }
+ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 10px;
+}
+
+svg + ul {
+    margin-top: -10px;
+}
