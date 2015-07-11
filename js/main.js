@@ -1,3 +1,6 @@
+//buglist
+
+// diverse svg mit id in der nähe von 1 werden zwar richtig angezeigt, aber bei öffnen in neuem tab oder als quelle kommt das falsche
 
 // After Page is load
 window.onload = function() {
@@ -13,15 +16,41 @@ window.onload = function() {
         bEl, // tmp Button Element Variable can be used several times
         buttonActionCreateCopies,
 		buttonActionRandomcolors,
+		buttonActionSimilar,
 		buttonActionUsercolor,
 		buttonActionNewTab,
+		buttonActionNewTabTOP,
 		colorbuttonhandler,
+		svgclick,
 		patharray=[];
 
     // Functions
+	//fetch similar rgb , ignores sliders. Value in SVG is hex or rgb
+	function similar(pathNR){ 
+		var startpic = document.getElementById("origsvg"+document.getElementById("target").value).firstChild;
+		var starthex = new chroma.color(startpic.getElementById(pathNR).style.fill,'hex'); //start is hex, needed for chroma conversion
+		var startrgb = starthex.rgb();
+		var sr = getRandomInt(stay(startrgb[0]-50), stay(startrgb[0]+50));
+		var sg = getRandomInt(stay(startrgb[1]-50), stay(startrgb[1]+50));
+		var sb = getRandomInt(stay(startrgb[2]-50), stay(startrgb[2]+50));
+		return "rgb(" + sr+","+sg+","+sb + ")";
+	}
 	
+	//keep values within bounds during similar()
+	function stay(test){ 
+		if (test < 0) {
+			return 0;
+		}else{
+			if (test > 250) {
+				return 250;
+			} else{
+				return test;
+			}
+		}
+	}
+
 	//fetch random rgb color using hsl sliders
-	 function randomrgb(){
+	function randomrgb(){
 		var hue = getRandomInt(document.getElementById("huemin").value, document.getElementById("huemax").value);
 		var sat = getRandom(document.getElementById("satmin").value/100, document.getElementById("satmax").value/100);
 		var light = getRandom(document.getElementById("lumin").value/100, document.getElementById("lumax").value/100);
@@ -130,35 +159,9 @@ window.onload = function() {
 		xhr4.send("");
 		//////////##################copy end
     }
-		
-    //Function cloneSVG 
-    //cloneSVG tree
-    function cloneSVG(){
-
-      //Source
-      var el = document.getElementById("origsvg").firstChild;
-      //Clone Variable
-      var cel = null;
-      //Append Clone
-      var pdest = document.getElementById("dest_clone");
-      //Delete All nested elements
-      while (pdest.firstChild) {
-        pdest.removeChild(pdest.firstChild);
-      }
-      // Get Nr of copies to do
-      var cnumEl = document.getElementById("nrOfCopies");
-      var cnum  = parseInt(cnumEl.value);
-
-      //insert nested cloned copy
-
-      for (var i = cnum; i > 0; i--) {
-        cel = el.cloneNode(true);
-        pdest.appendChild(cel);
-      };
-
-    }
 	
-	function makecolorpickers(cel){ //make color picker list 
+	//make color picker list, append pickers as li-elements to ul from randomcolors(), is called once per svg-variant generated
+	function makecolorpickers(cel){  
 		var getcolor; 
 		var input;
 		var liEl;	
@@ -200,7 +203,7 @@ window.onload = function() {
     } 
 
 	//Randomize colors
-	function randomcolors(target){ /*patharray drawing.svg = ["path1", "path2", "path3", "path5"]; */
+	function randomcolors(target, simil){ /*patharray drawing.svg = ["path1", "path2", "path3", "path5"]; */
 		'use strict';
 		//list element to add colorpickers to
 		var list;
@@ -217,13 +220,12 @@ window.onload = function() {
 		// value of this element
 		var cnum;
 		//div capsules: [(svg  (colorpicker)) (svg (colorpicker)) ....]
-		var svgdiv;
-		var inputdiv;
+		var svgdiv, inputdiv;
 		//label and text to identify correct svg for "open in new tab"
 		var label, labeltext;
 		//get list of existing path ids
 		patharray=fillpatharray(el);
-		//Delete All nested elements
+		//Delete All nested elements in "resulting svg" container div
 		while (pdest.firstChild) {
 		  pdest.removeChild(pdest.firstChild);
 		}
@@ -237,12 +239,22 @@ window.onload = function() {
 			cel.id = "picture"+i;
 			patharray.forEach(function(entry){    //for each entry = pathID within patharray
 				colorpath = cel.getElementById(entry);
-				colorpath.style.fill = randomrgb();
+				if(simil){
+					colorpath.style.fill = similar(entry);
+				}else{
+					colorpath.style.fill = randomrgb();
+				}
 			});
 			inputdiv = document.createElement("div");  //div for colorpickers to have them besides svg
 			inputdiv.className = "leftflow";
 			svgdiv = document.createElement("div");  //div for svg and inputdiv to keep svg besides its colorpickers
 			svgdiv.className = "leftflow";
+			// add eventlistener to svg element cel
+			if(svgdiv.addEventListener){
+			  svgdiv.addEventListener("click", svgclick);
+			} else {
+			  svgdiv.attachEvent("click", svgclick);
+			}
 			pdest.appendChild(svgdiv);
 			svgdiv.appendChild(cel);
 			svgdiv.appendChild(inputdiv);
@@ -269,17 +281,37 @@ window.onload = function() {
 	buttonActionRandomcolors=function(event){
       if ( event.preventDefault ) { event.preventDefault();}
          event.returnValue = false;  
-         randomcolors(document.getElementById("target").value);
+         randomcolors(document.getElementById("target").value, false);
+    };
+	buttonActionSimilar=function(event){
+      if ( event.preventDefault ) { event.preventDefault();}
+         event.returnValue = false;  
+         randomcolors(document.getElementById("target").value, true);
     };
 	buttonActionNewTab=function(event){
       if ( event.preventDefault ) { event.preventDefault();}
          event.returnValue = false;  
          show_svg("picture"+document.getElementById("nrOfCopies").value);
     };
+	//Variant for new tab by clicking
+	buttonActionNewTabTOP=function(event){
+      if ( event.preventDefault ) { event.preventDefault();}
+         event.returnValue = false;
+         show_svg(event.target.parentNode.id);
+    };
     colorbuttonhandler=function(event){
       var tmp = event.target.id.split("_");
       // 1 SVG ID , 0 Path ID
       document.getElementById(tmp[1]).getElementById(tmp[0]).style.fill=event.target.value;
+    };
+	svgclick=function(event){
+		var tmp = event.target.parentNode.id; //Needs mouse aiming to occupied image areas otherwise target is not an svg-path element and bug starts
+		var oldsvg = document.getElementById("origsvg"+document.getElementById("target").value);
+			while (oldsvg.firstChild) {
+				oldsvg.removeChild(oldsvg.firstChild);
+			}
+		var newsvg = document.getElementById(tmp).cloneNode(true);
+		oldsvg.appendChild(newsvg);
     };
 
     // Event-Listeners
@@ -289,11 +321,41 @@ window.onload = function() {
     } else {
         bEl.attachEvent("click", buttonActionRandomcolors);
     }
+	bEl = document.getElementById("bSimilar");
+    if(bEl.addEventListener){
+                 bEl.addEventListener("click", buttonActionSimilar);
+    } else {
+        bEl.attachEvent("click", buttonActionSimilar);
+    }
 	bEl = document.getElementById("bNewTab");
     if(bEl.addEventListener){
                  bEl.addEventListener("click", buttonActionNewTab);
     } else {
         bEl.attachEvent("click", buttonActionNewTab);
+    }
+	bEl = document.getElementById("origsvg1");
+    if(bEl.addEventListener){
+                 bEl.addEventListener("click", buttonActionNewTabTOP);
+    } else {
+        bEl.attachEvent("click", buttonActionNewTabTOP);
+    }
+	bEl = document.getElementById("origsvg2");
+    if(bEl.addEventListener){
+                 bEl.addEventListener("click", buttonActionNewTabTOP);
+    } else {
+        bEl.attachEvent("click", buttonActionNewTabTOP);
+    }
+	bEl = document.getElementById("origsvg3");
+    if(bEl.addEventListener){
+                 bEl.addEventListener("click", buttonActionNewTabTOP);
+    } else {
+        bEl.attachEvent("click", buttonActionNewTabTOP);
+    }
+	bEl = document.getElementById("origsvg4");
+    if(bEl.addEventListener){
+                 bEl.addEventListener("click", buttonActionNewTabTOP);
+    } else {
+        bEl.attachEvent("click", buttonActionNewTabTOP);
     }
     // Start here
 	loadimages();
