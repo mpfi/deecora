@@ -48,87 +48,87 @@ window.onload = function() {
     // TODO Choose which SVG File to load from server
     // LATER TODO upload possibility to server
     function loadimage(filename, imagecount) {  //loadimage("media/drawing.svg",1);
-     // Singleton only one xhr Element
-    // if (xhr === null){
-  	   xhr = new XMLHttpRequest();
-    // }
+		// Singleton only one xhr Element
+		if (xhr === null){
+			xhr = new XMLHttpRequest();
+		}
 	 
-     //callback after AJAX worked
-     xhr.onreadystatechange=function(){
-      if((xhr.readyState==4)&&(xhr.status==200)){
-         var el = document.getElementById("origsvg"+imagecount);
-         while (el.firstChild) {
-           el.removeChild(el.firstChild);
-         }
-         el.appendChild(xhr.responseXML.documentElement);
-      }
-     };
+		//callback after AJAX worked
+		xhr.onreadystatechange=function(){
+			if((xhr.readyState==4)&&(xhr.status==200)){
+				var el = document.getElementById("origsvg"+imagecount);
+				while (el.firstChild) {
+					el.removeChild(el.firstChild);
+				}
+				el.appendChild(xhr.responseXML.documentElement);
+			}
+		};
 
-  	 xhr.open("GET",filename);
-  	 // Following line is just to be on the safe side;
-  	 // not needed if your server delivers SVG with correct MIME type
-     xhr.overrideMimeType("image/svg+xml");
-     xhr.send("");
+		xhr.open("GET",filename);
+		// Following line is just to be on the safe side;
+		// not needed if your server delivers SVG with correct MIME type
+		xhr.overrideMimeType("image/svg+xml");
+		xhr.send("");
     }
 	function loadimages() {
-     // Singleton only one xhr Element
-    if (xhr === null){
-  	   xhr = new XMLHttpRequest();
-    }
-    //callback after AJAX worked
-    xhr.onreadystatechange=function(){
-		if((xhr.readyState==4)&&(xhr.status==200)){
-			var el = document.getElementById("origsvg1");
-			while (el.firstChild) {
-				el.removeChild(el.firstChild);
-			}
-        el.appendChild(xhr.responseXML.documentElement);
+		// Singleton only one xhr Element
+		if (xhr === null){
+			xhr = new XMLHttpRequest();
 		}
-    };
+		//callback after AJAX worked
+		xhr.onreadystatechange=function(){
+			if((xhr.readyState==4)&&(xhr.status==200)){
+				var el = document.getElementById("origsvg1");
+				while (el.firstChild) {
+					el.removeChild(el.firstChild);
+				}
+				el.appendChild(xhr.responseXML.documentElement);
+			}
+		};
 
-  	xhr.open("GET","media/drawing.svg");
-  	// Following line is just to be on the safe side;
-  	// not needed if your server delivers SVG with correct MIME type
-    xhr.overrideMimeType("image/svg+xml");
-    xhr.send("");
-	/////////###################copy start
-  	xhr2 = new XMLHttpRequest();
-	xhr2.onreadystatechange=function(){
-		if((xhr2.readyState==4)&&(xhr.status==200)){
-			var el2 = document.getElementById("origsvg2");
-			while (el2.firstChild) {
-				el2.removeChild(el2.firstChild);
+		xhr.open("GET","media/drawing.svg");
+		// Following line is just to be on the safe side;
+		// not needed if your server delivers SVG with correct MIME type
+		xhr.overrideMimeType("image/svg+xml");
+		xhr.send("");
+		/////////###################copy start
+		xhr2 = new XMLHttpRequest();
+		xhr2.onreadystatechange=function(){
+			if((xhr2.readyState==4)&&(xhr.status==200)){
+				var el2 = document.getElementById("origsvg2");
+				while (el2.firstChild) {
+					el2.removeChild(el2.firstChild);
+				}
+			el2.appendChild(xhr2.responseXML.documentElement);
 			}
-        el2.appendChild(xhr2.responseXML.documentElement);
-		}
-    };
-  	xhr2.open("GET","media/colibrisimple.svg");
-    xhr2.send("");
-	xhr3 = new XMLHttpRequest();
-	xhr3.onreadystatechange=function(){
-		if((xhr3.readyState==4)&&(xhr.status==200)){
-			var el3 = document.getElementById("origsvg3");
-			while (el3.firstChild) {
-				el3.removeChild(el3.firstChild);
+		};
+		xhr2.open("GET","media/bird.svg");
+		xhr2.send("");
+		xhr3 = new XMLHttpRequest();
+		xhr3.onreadystatechange=function(){
+			if((xhr3.readyState==4)&&(xhr.status==200)){
+				var el3 = document.getElementById("origsvg3");
+				while (el3.firstChild) {
+					el3.removeChild(el3.firstChild);
+				}
+			el3.appendChild(xhr3.responseXML.documentElement);
 			}
-        el3.appendChild(xhr3.responseXML.documentElement);
-		}
-    };
-  	xhr3.open("GET","media/bird.svg");
-    xhr3.send("");
-	xhr4 = new XMLHttpRequest();
-	xhr4.onreadystatechange=function(){
-		if((xhr4.readyState==4)&&(xhr.status==200)){
-			var el4 = document.getElementById("origsvg4");
-			while (el4.firstChild) {
-				el4.removeChild(el4.firstChild);
+		};
+		xhr3.open("GET","media/colibrisimple.svg");
+		xhr3.send("");
+		xhr4 = new XMLHttpRequest();
+		xhr4.onreadystatechange=function(){
+			if((xhr4.readyState==4)&&(xhr.status==200)){
+				var el4 = document.getElementById("origsvg4");
+				while (el4.firstChild) {
+					el4.removeChild(el4.firstChild);
+				}
+			el4.appendChild(xhr4.responseXML.documentElement);
 			}
-        el4.appendChild(xhr4.responseXML.documentElement);
-		}
-    };
-  	xhr4.open("GET","media/colibri.svg");
-    xhr4.send("");
-	//////////##################copy end
+		};
+		xhr4.open("GET","media/colibri.svg");
+		xhr4.send("");
+		//////////##################copy end
     }
 		
     //Function cloneSVG 
@@ -158,28 +158,28 @@ window.onload = function() {
 
     }
 	
-  function makecolorpickers(cel){ //make color picker list 
-    var getcolor; 
-    var input;
-	var liEl;	
-    patharray.forEach(function(entry){
-		getcolor = cel.getElementById(entry).style.fill;
-        input = document.createElement("input"); //input type color
-        input.type = "color";
-        input.value = chroma.hex(getcolor);
-        input.id = entry+"_"+cel.id;
+	function makecolorpickers(cel){ //make color picker list 
+		var getcolor; 
+		var input;
+		var liEl;	
+		patharray.forEach(function(entry){
+			getcolor = cel.getElementById(entry).style.fill;
+			input = document.createElement("input"); //input type color
+			input.type = "color";
+			input.value = chroma.hex(getcolor);
+			input.id = entry+"_"+cel.id;
 
-        // add eventlistener to input button
-        if(input.addEventListener){
-          input.addEventListener("change", colorbuttonhandler);
-        } else {
-          input.attachEvent("change", colorbuttonhandler);
-        }
-        //list element gets added to ul element from randomcolors()
-		liEl = document.createElement("LI");
-		document.getElementById("list"+cel.id).appendChild(liEl);
-        liEl.appendChild(input);
-      });
+			// add eventlistener to input button
+			if(input.addEventListener){
+			  input.addEventListener("change", colorbuttonhandler);
+			} else {
+			  input.attachEvent("change", colorbuttonhandler);
+			}
+			//list element gets added to ul element from randomcolors()
+			liEl = document.createElement("LI");
+			document.getElementById("list"+cel.id).appendChild(liEl);
+			liEl.appendChild(input);
+		});
     }
 
    function fillpatharray(el){ //Make array of pathnames, checks only from 0 to 100
@@ -219,6 +219,8 @@ window.onload = function() {
 		//div capsules: [(svg  (colorpicker)) (svg (colorpicker)) ....]
 		var svgdiv;
 		var inputdiv;
+		//label and text to identify correct svg for "open in new tab"
+		var label, labeltext;
 		//get list of existing path ids
 		patharray=fillpatharray(el);
 		//Delete All nested elements
@@ -232,8 +234,8 @@ window.onload = function() {
 		//insert nested cloned copy
 		for (var i = cnum; i > 0; i--) {
 			cel = el.cloneNode(true);
-			cel.id = "clone"+i;
-			patharray.forEach(function(entry){
+			cel.id = "picture"+i;
+			patharray.forEach(function(entry){    //for each entry = pathID within patharray
 				colorpath = cel.getElementById(entry);
 				colorpath.style.fill = randomrgb();
 			});
@@ -247,6 +249,10 @@ window.onload = function() {
 			list = document.createElement("UL"); //ul-element for list of inputs created in makecolorpickers
 			list.id = "list"+ cel.id;
 			inputdiv.appendChild(list);
+			label=document.createElement("LI"); //first list node
+			labeltext = document.createTextNode(cel.id); //text for first list node
+			label.appendChild(labeltext);
+			list.appendChild(label);
 			makecolorpickers(cel);
 		};
 	}
@@ -260,13 +266,6 @@ window.onload = function() {
   	 
 
     // Callback-Functions
-
-    buttonActionCreateCopies=function(event){
-      if ( event.preventDefault ) { event.preventDefault();}
-         event.returnValue = false;  
-         cloneSVG();
-
-    };
 	buttonActionRandomcolors=function(event){
       if ( event.preventDefault ) { event.preventDefault();}
          event.returnValue = false;  
@@ -275,7 +274,7 @@ window.onload = function() {
 	buttonActionNewTab=function(event){
       if ( event.preventDefault ) { event.preventDefault();}
          event.returnValue = false;  
-         show_svg("clone"+document.getElementById("nrOfCopies").value);
+         show_svg("picture"+document.getElementById("nrOfCopies").value);
     };
     colorbuttonhandler=function(event){
       var tmp = event.target.id.split("_");
@@ -284,13 +283,6 @@ window.onload = function() {
     };
 
     // Event-Listeners
-
-    bEl = document.getElementById("bCreateCopies");
-    if(bEl.addEventListener){
-                 bEl.addEventListener("click", buttonActionCreateCopies);
-    } else {
-        bEl.attachEvent("click", buttonActionCreateCopies);
-    }
 	bEl = document.getElementById("bRandomcolors");
     if(bEl.addEventListener){
                  bEl.addEventListener("click", buttonActionRandomcolors);
