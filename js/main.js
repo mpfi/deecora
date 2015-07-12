@@ -219,8 +219,8 @@ window.onload = function() {
 		var cnumEl;
 		// value of this element
 		var cnum;
-		//div capsules: [(svg  (colorpicker)) (svg (colorpicker)) ....]
-		var svgdiv, inputdiv;
+		//div capsules: [((svg)  (colorpicker)) ((svg) (colorpicker)) ....]
+		var svgdiv, inputdiv, picdiv;
 		//label and text to identify correct svg for "open in new tab"
 		var label, labeltext;
 		//get list of existing path ids
@@ -247,16 +247,19 @@ window.onload = function() {
 			});
 			inputdiv = document.createElement("div");  //div for colorpickers to have them besides svg
 			inputdiv.className = "leftflow";
+			picdiv = document.createElement("div");		//div for picture to add eventlistener to
+			picdiv.className = "leftflow";
 			svgdiv = document.createElement("div");  //div for svg and inputdiv to keep svg besides its colorpickers
 			svgdiv.className = "leftflow";
 			// add eventlistener to svg element cel
-			if(svgdiv.addEventListener){
-			  svgdiv.addEventListener("click", svgclick);
+			if(picdiv.addEventListener){
+			  picdiv.addEventListener("click", svgclick);
 			} else {
-			  svgdiv.attachEvent("click", svgclick);
+			  picdiv.attachEvent("click", svgclick);
 			}
 			pdest.appendChild(svgdiv);
-			svgdiv.appendChild(cel);
+			picdiv.appendChild(cel);
+			svgdiv.appendChild(picdiv);
 			svgdiv.appendChild(inputdiv);
 			list = document.createElement("UL"); //ul-element for list of inputs created in makecolorpickers
 			list.id = "list"+ cel.id;
@@ -306,11 +309,13 @@ window.onload = function() {
     };
 	svgclick=function(event){
 		var tmp = event.target.parentNode.id; //Needs mouse aiming to occupied image areas otherwise target is not an svg-path element and bug starts
+		var tmpID = document.getElementById("origsvg"+document.getElementById("target").value).firstChild.id;
 		var oldsvg = document.getElementById("origsvg"+document.getElementById("target").value);
 			while (oldsvg.firstChild) {
 				oldsvg.removeChild(oldsvg.firstChild);
 			}
 		var newsvg = document.getElementById(tmp).cloneNode(true);
+		newsvg.id = tmpID;
 		oldsvg.appendChild(newsvg);
     };
 
