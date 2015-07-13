@@ -252,7 +252,7 @@ window.onload = function() {
 		var svg_win = window.open(url, "svg_win");
 	}
 
-    // Callback-Functions
+	// Callback-Functions
 	buttonActionRandomcolors=function(event){
 		if ( event.preventDefault ) { event.preventDefault();}
 		event.returnValue = false;  
@@ -308,7 +308,7 @@ window.onload = function() {
 		bEl.addEventListener("click", buttonActionNewTab);
 	} else {
 		bEl.attachEvent("click", buttonActionNewTab);
-    }
+	}
 	bEl = document.getElementById("origsvg1");
 	if(bEl.addEventListener){
 		bEl.addEventListener("click", buttonActionNewTabTOP);
