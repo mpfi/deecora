@@ -1,6 +1,3 @@
-//buglist
-
-// diverse svg mit id in der nähe von 1 werden zwar richtig angezeigt, aber bei öffnen in neuem tab oder als quelle kommt das falsche
 
 // After Page is load
 window.onload = function() {
@@ -11,29 +8,27 @@ window.onload = function() {
     'use strict';
     
     // VAR
-    var xhr=null,  //multiples, 1 for each file to load
-		xhr2 =null, xhr3=null, xhr4=null,
+    var xhr=null,                 //XMLHttpRequest
+		xhr2 =null, xhr3=null, xhr4=null, //multiples, 1 for each file to load
         bEl, // tmp Button Element Variable can be used several times
-        buttonActionCreateCopies,
-		buttonActionRandomcolors,
-		buttonActionSimilar,
-		buttonActionUsercolor,
-		buttonActionNewTab,
-		buttonActionNewTabTOP,
-		colorbuttonhandler,
-		svgclick,
-		patharray=[];
+		buttonActionRandomcolors, //callback function for Button random colors
+		buttonActionSimilar,      //callback function for Button Similar    
+		buttonActionNewTab,       //callback function for Button NewTab
+		buttonActionNewTabTOP,    //callback function for click on upper svg to open new tab
+		colorbuttonhandler,       //callback function for Colorpickers
+		svgclick,                 //callback function for click on generated svg (those below the buttons and sliders)
+		patharray=[];             //list of existing path-IDs
 
     // Functions
 	//fetch similar rgb , ignores sliders. Value in SVG is hex or rgb
 	function similar(pathNR){ 
-		var startpic = document.getElementById("origsvg"+document.getElementById("target").value).firstChild;
-		var starthex = new chroma.color(startpic.getElementById(pathNR).style.fill,'hex'); //start is hex, needed for chroma conversion
-		var startrgb = starthex.rgb();
-		var sr = getRandomInt(stay(startrgb[0]-50), stay(startrgb[0]+50));
-		var sg = getRandomInt(stay(startrgb[1]-50), stay(startrgb[1]+50));
-		var sb = getRandomInt(stay(startrgb[2]-50), stay(startrgb[2]+50));
-		return "rgb(" + sr+","+sg+","+sb + ")";
+		var startpic = document.getElementById("origsvg"+document.getElementById("target").value).firstChild; //origsvgX is div containing original svg 
+		var starthex = new chroma.color(startpic.getElementById(pathNR).style.fill,'hex'); //initializes chroma color element of type hex, style.fill can be non-hex
+		var startrgb = starthex.rgb();                                           //converts to array of 3 numbers, rgb values
+		var sr = getRandomInt(stay(startrgb[0]-50), stay(startrgb[0]+50));       //100 points range with starting value in the middle, stay makes negatives to 0 and too big numbers to 255
+		var sg = getRandomInt(stay(startrgb[1]-50), stay(startrgb[1]+50));       //experiments have shown 50 works. Can be made smaller for more similarity
+		var sb = getRandomInt(stay(startrgb[2]-50), stay(startrgb[2]+50));       //or bigger for more variation
+		return "rgb(" + sr+","+sg+","+sb + ")";                                  // return string to go to style.fill of pathelement
 	}
 	
 	//keep values within bounds during similar()
@@ -51,19 +46,18 @@ window.onload = function() {
 
 	//fetch random rgb color using hsl sliders
 	function randomrgb(){
-		var hue = getRandomInt(document.getElementById("huemin").value, document.getElementById("huemax").value);
-		var sat = getRandom(document.getElementById("satmin").value/100, document.getElementById("satmax").value/100);
-		var light = getRandom(document.getElementById("lumin").value/100, document.getElementById("lumax").value/100);
-		var col = chroma.hsl(hue, sat, light);
-	
-		return "rgb(" + col.rgb() + ")";
+		var hue = getRandomInt(document.getElementById("huemin").value, document.getElementById("huemax").value);      //0 to 360 because color wheel, angle is color
+		var sat = getRandom(document.getElementById("satmin").value/100, document.getElementById("satmax").value/100); //0 to 100 divided by 100 because needs to be percentage
+		var light = getRandom(document.getElementById("lumin").value/100, document.getElementById("lumax").value/100); //neds to be percentage
+		var col = chroma.hsl(hue, sat, light);                                                                         //initialize chroma element type hsl
+		return "rgb(" + col.rgb() + ")";                                                                               //return as rgb because style.fill prefers rgb
 	}
 
 	// returns a random int between min and max
 	function getRandomInt(min, max) {
 		var minimum = parseInt(min);
 		var maximum = parseInt(max);
-		var randomeins = Math.round(Math.random() * (maximum - minimum)); //did not work when not split up
+		var randomeins = Math.round(Math.random() * (maximum - minimum)); 
 		var randomzwei = randomeins + minimum;
 		return randomzwei;
 	}
@@ -73,32 +67,9 @@ window.onload = function() {
 		return Math.random() * (max - min) + min; 
 	}
 	 
-    // Load Image with AjAX
+    // Load Images with AjAX
     // TODO Choose which SVG File to load from server
     // LATER TODO upload possibility to server
-    function loadimage(filename, imagecount) {  //loadimage("media/drawing.svg",1);
-		// Singleton only one xhr Element
-		if (xhr === null){
-			xhr = new XMLHttpRequest();
-		}
-	 
-		//callback after AJAX worked
-		xhr.onreadystatechange=function(){
-			if((xhr.readyState==4)&&(xhr.status==200)){
-				var el = document.getElementById("origsvg"+imagecount);
-				while (el.firstChild) {
-					el.removeChild(el.firstChild);
-				}
-				el.appendChild(xhr.responseXML.documentElement);
-			}
-		};
-
-		xhr.open("GET",filename);
-		// Following line is just to be on the safe side;
-		// not needed if your server delivers SVG with correct MIME type
-		xhr.overrideMimeType("image/svg+xml");
-		xhr.send("");
-    }
 	function loadimages() {
 		// Singleton only one xhr Element
 		if (xhr === null){
@@ -108,10 +79,10 @@ window.onload = function() {
 		xhr.onreadystatechange=function(){
 			if((xhr.readyState==4)&&(xhr.status==200)){
 				var el = document.getElementById("origsvg1");
-				while (el.firstChild) {
-					el.removeChild(el.firstChild);
+				while (el.firstChild) {                                            //while there is a first child node
+					el.removeChild(el.firstChild);                                 // delete it to get rid of old stuff
 				}
-				el.appendChild(xhr.responseXML.documentElement);
+				el.appendChild(xhr.responseXML.documentElement);                    //put newly loaded svg there
 			}
 		};
 
@@ -120,7 +91,8 @@ window.onload = function() {
 		// not needed if your server delivers SVG with correct MIME type
 		xhr.overrideMimeType("image/svg+xml");
 		xhr.send("");
-		/////////###################copy start
+		/////////###################copy start          this part is a copy of the above but for another image. Will be replaced by uploading function or
+		//                                              ability to choose from files on a server.    
 		xhr2 = new XMLHttpRequest();
 		xhr2.onreadystatechange=function(){
 			if((xhr2.readyState==4)&&(xhr.status==200)){
@@ -157,20 +129,20 @@ window.onload = function() {
 		};
 		xhr4.open("GET","media/colibri.svg");
 		xhr4.send("");
-		//////////##################copy end
+		//////////##################copy end                            copied part end
     }
 	
 	//make color picker list, append pickers as li-elements to ul from randomcolors(), is called once per svg-variant generated
 	function makecolorpickers(cel){  
-		var getcolor; 
-		var input;
-		var liEl;	
-		patharray.forEach(function(entry){
-			getcolor = cel.getElementById(entry).style.fill;
-			input = document.createElement("input"); //input type color
-			input.type = "color";
-			input.value = chroma.hex(getcolor);
-			input.id = entry+"_"+cel.id;
+		var getcolor;                                     //color of pathelement
+		var input;                                        //node type input type color
+		var liEl;	                                      //node type list
+		patharray.forEach(function(entry){                //entry is pathID, patharray is array of all paths of current svg file
+			getcolor = cel.getElementById(entry).style.fill; //currentsvg.getElementById(pathid) color, is hex or rgb
+			input = document.createElement("input");      //element type input 
+			input.type = "color";                         //input type color to make predefined colorpicker
+			input.value = chroma.hex(getcolor);           //starting color of corresponding path, needs to be hex for colorpicker
+			input.id = entry+"_"+cel.id;                  //id is pathID_SVGID
 
 			// add eventlistener to input button
 			if(input.addEventListener){
@@ -179,22 +151,22 @@ window.onload = function() {
 			  input.attachEvent("change", colorbuttonhandler);
 			}
 			//list element gets added to ul element from randomcolors()
-			liEl = document.createElement("LI");
-			document.getElementById("list"+cel.id).appendChild(liEl);
-			liEl.appendChild(input);
+			liEl = document.createElement("LI");           //create element type list
+			document.getElementById("list"+cel.id).appendChild(liEl); //find element with ID listcurrentSVG, which is container ul for colorpickers and append li element
+			liEl.appendChild(input);                       //append colorpicker to li element                           
 		});
     }
 
    function fillpatharray(el){ //Make array of pathnames, checks only from 0 to 100
-      var fi = 0;
+      var fi = 0;              //counter, if paths start at high numbers (inkcscape) put this to lowest path number
       var arraypath;
-      var arraypos =0;
-      var tmp = [];
-      while (fi < 100) {
-          arraypath = "path" + fi.toString();
+      var arraypos =0;           
+      var tmp = [];            //array to be filled  
+      while (fi < 100) {       // if highest path number bigger than 100 increase this number
+          arraypath = "path" + fi.toString(); //create ID to test
           //only get path if path exists, else skip
           if(el.getElementById(arraypath) != null){ //el is sourceSVG from randomcolors()
-            tmp[arraypos]=arraypath;
+            tmp[arraypos]=arraypath;          //save existing ID in array
             arraypos++;
           }
       fi++;
@@ -221,11 +193,11 @@ window.onload = function() {
 		var cnum;
 		//div capsules: [((svg)  (colorpicker)) ((svg) (colorpicker)) ....]
 		var svgdiv, inputdiv, picdiv;
-		//label and text to identify correct svg for "open in new tab"
+		//label and text to identify correct svg for "open in new tab", is the same as ID of svg
 		var label, labeltext;
 		//get list of existing path ids
 		patharray=fillpatharray(el);
-		//Delete All nested elements in "resulting svg" container div
+		//Delete All nested elements in "resulting svg" container div, these are old svgs and we will make new ones
 		while (pdest.firstChild) {
 		  pdest.removeChild(pdest.firstChild);
 		}
@@ -235,42 +207,43 @@ window.onload = function() {
 
 		//insert nested cloned copy
 		for (var i = cnum; i > 0; i--) {
-			cel = el.cloneNode(true);
-			cel.id = "picture"+i;
-			patharray.forEach(function(entry){    //for each entry = pathID within patharray
-				colorpath = cel.getElementById(entry);
-				if(simil){
-					colorpath.style.fill = similar(entry);
+			cel = el.cloneNode(true);                //clone Source svg, true means all children get cloned too, children are pathelements, these make up the picture
+			cel.id = "picture"+i;                    //new ID because it's a new picture
+			patharray.forEach(function(entry){       //for each entry = pathID within patharray
+				colorpath = cel.getElementById(entry); //path to be recolored
+				if(simil){                             //this is true if the similar-button was pressed and false if the variants button was pressed 
+					colorpath.style.fill = similar(entry);  //similar will check designated source svg to get starting values
 				}else{
-					colorpath.style.fill = randomrgb();
+					colorpath.style.fill = randomrgb();  //randomrgb will check sliders to get random ranges
 				}
 			});
 			inputdiv = document.createElement("div");  //div for colorpickers to have them besides svg
-			inputdiv.className = "leftflow";
+			inputdiv.className = "leftflow";           //makes everything flow left which looks nice and it arranges itself to the windowsize
 			picdiv = document.createElement("div");		//div for picture to add eventlistener to
 			picdiv.className = "leftflow";
 			svgdiv = document.createElement("div");  //div for svg and inputdiv to keep svg besides its colorpickers
 			svgdiv.className = "leftflow";
 			// add eventlistener to svg element cel
 			if(picdiv.addEventListener){
-			  picdiv.addEventListener("click", svgclick);
+				picdiv.addEventListener("click", svgclick);
 			} else {
-			  picdiv.attachEvent("click", svgclick);
+				picdiv.attachEvent("click", svgclick);
 			}
-			pdest.appendChild(svgdiv);
-			picdiv.appendChild(cel);
-			svgdiv.appendChild(picdiv);
-			svgdiv.appendChild(inputdiv);
-			list = document.createElement("UL"); //ul-element for list of inputs created in makecolorpickers
+			pdest.appendChild(svgdiv);                //This part will look like this: destclone{ svgdiv[ picdiv() inputdiv() ] }
+			picdiv.appendChild(cel);                                                   
+			svgdiv.appendChild(picdiv);                                           
+			svgdiv.appendChild(inputdiv);             
+			list = document.createElement("UL");      //ul-element for list of inputs created in makecolorpickers
 			list.id = "list"+ cel.id;
 			inputdiv.appendChild(list);
-			label=document.createElement("LI"); //first list node
+			label=document.createElement("LI");      //first list node, the one with the label
 			labeltext = document.createTextNode(cel.id); //text for first list node
 			label.appendChild(labeltext);
 			list.appendChild(label);
-			makecolorpickers(cel);
-		};
+			makecolorpickers(cel);                     //now it will look like this: destclone{ svgdiv[ picdiv( cel) inputdiv( ul{ Li}) ] }
+		};                                             //makecolorpickers will add more li-elements with colorpickers in them to ul 
 	}
+	
 	//opens colorpicker in new tab
 	function show_svg(cloneID) {  
 		var serializer = new XMLSerializer();
@@ -278,48 +251,46 @@ window.onload = function() {
 		var url = URL.createObjectURL(svg_blob);
 		var svg_win = window.open(url, "svg_win");
     }
-  	 
 
     // Callback-Functions
 	buttonActionRandomcolors=function(event){
       if ( event.preventDefault ) { event.preventDefault();}
          event.returnValue = false;  
-         randomcolors(document.getElementById("target").value, false);
+         randomcolors(document.getElementById("target").value, false); //false because this is not the similar chain, this is the sliders chain
     };
 	buttonActionSimilar=function(event){
       if ( event.preventDefault ) { event.preventDefault();}
          event.returnValue = false;  
-         randomcolors(document.getElementById("target").value, true);
+         randomcolors(document.getElementById("target").value, true); //true because this is the similar chain and not the sliders chain
     };
-	buttonActionNewTab=function(event){
+	buttonActionNewTab=function(event){                               //new tab version started by button
       if ( event.preventDefault ) { event.preventDefault();}
          event.returnValue = false;  
          show_svg("picture"+document.getElementById("nrOfCopies").value);
     };
-	//Variant for new tab by clicking
-	buttonActionNewTabTOP=function(event){
+	buttonActionNewTabTOP=function(event){                             //Variant for new tab by clicking on svg in top row
       if ( event.preventDefault ) { event.preventDefault();}
          event.returnValue = false;
-         show_svg(event.target.parentNode.id);
+         show_svg(event.target.parentNode.id);                         //could be used for other clicked stuff but the other svg have a different click behavior, svgclick
     };
-    colorbuttonhandler=function(event){
+    colorbuttonhandler=function(event){                                //gets added to colorpickers
       var tmp = event.target.id.split("_");
       // 1 SVG ID , 0 Path ID
       document.getElementById(tmp[1]).getElementById(tmp[0]).style.fill=event.target.value;
     };
 	svgclick=function(event){
-		var tmp = event.target.parentNode.id; //Needs mouse aiming to occupied image areas otherwise target is not an svg-path element and bug starts
+		var tmp = event.target.parentNode.id;                          //Needs mouse aiming to occupied image areas otherwise target is not an svg-path element and bug starts
 		var tmpID = document.getElementById("origsvg"+document.getElementById("target").value).firstChild.id;
 		var oldsvg = document.getElementById("origsvg"+document.getElementById("target").value);
 			while (oldsvg.firstChild) {
 				oldsvg.removeChild(oldsvg.firstChild);
 			}
 		var newsvg = document.getElementById(tmp).cloneNode(true);
-		newsvg.id = tmpID;
+		newsvg.id = tmpID;                                             //use ID of the old svg
 		oldsvg.appendChild(newsvg);
     };
 
-    // Event-Listeners
+    // Event-Listeners 
 	bEl = document.getElementById("bRandomcolors");
     if(bEl.addEventListener){
                  bEl.addEventListener("click", buttonActionRandomcolors);
@@ -364,7 +335,5 @@ window.onload = function() {
     }
     // Start here
 	loadimages();
-	
-	
   })();
 };
