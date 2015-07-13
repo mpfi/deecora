@@ -134,15 +134,15 @@ window.onload = function() {
 	
 	//make color picker list, append pickers as li-elements to ul from randomcolors(), is called once per svg-variant generated
 	function makecolorpickers(cel){  
-		var getcolor;                                     //color of pathelement
-		var input;                                        //node type input type color
-		var liEl;	                                      //node type list
-		patharray.forEach(function(entry){                //entry is pathID, patharray is array of all paths of current svg file
+		var getcolor;                                        //color of pathelement
+		var input;                                           //node type input type color
+		var liEl;                                            //node type list
+		patharray.forEach(function(entry){                   //entry is pathID, patharray is array of all paths of current svg file
 			getcolor = cel.getElementById(entry).style.fill; //currentsvg.getElementById(pathid) color, is hex or rgb
-			input = document.createElement("input");      //element type input 
-			input.type = "color";                         //input type color to make predefined colorpicker
-			input.value = chroma.hex(getcolor);           //starting color of corresponding path, needs to be hex for colorpicker
-			input.id = entry+"_"+cel.id;                  //id is pathID_SVGID
+			input = document.createElement("input");         //element type input 
+			input.type = "color";                            //input type color to make predefined colorpicker
+			input.value = chroma.hex(getcolor);              //starting color of corresponding path, needs to be hex for colorpicker
+			input.id = entry+"_"+cel.id;                     //id is pathID_SVGID
 
 			// add eventlistener to input button
 			if(input.addEventListener){
@@ -157,12 +157,12 @@ window.onload = function() {
 		});
     }
 
-   function fillpatharray(el){ //Make array of pathnames, checks only from 0 to 100
-      var fi = 0;              //counter, if paths start at high numbers (inkcscape) put this to lowest path number
+   function fillpatharray(el){    //Make array of pathnames, checks only from 0 to 100
+      var fi = 0;                 //counter, if paths start at high numbers (inkcscape) put this to lowest path number
       var arraypath;
       var arraypos =0;           
-      var tmp = [];            //array to be filled  
-      while (fi < 100) {       // if highest path number bigger than 100 increase this number
+      var tmp = [];               //array to be filled  
+      while (fi < 100) {          // if highest path number bigger than 100 increase this number
           arraypath = "path" + fi.toString(); //create ID to test
           //only get path if path exists, else skip
           if(el.getElementById(arraypath) != null){ //el is sourceSVG from randomcolors()
@@ -207,21 +207,21 @@ window.onload = function() {
 
 		//insert nested cloned copy
 		for (var i = cnum; i > 0; i--) {
-			cel = el.cloneNode(true);                //clone Source svg, true means all children get cloned too, children are pathelements, these make up the picture
-			cel.id = "picture"+i;                    //new ID because it's a new picture
-			patharray.forEach(function(entry){       //for each entry = pathID within patharray
-				colorpath = cel.getElementById(entry); //path to be recolored
-				if(simil){                             //this is true if the similar-button was pressed and false if the variants button was pressed 
+			cel = el.cloneNode(true);                       //clone Source svg, true means all children get cloned too, children are pathelements, these make up the picture
+			cel.id = "picture"+i;                           //new ID because it's a new picture
+			patharray.forEach(function(entry){              //for each entry = pathID within patharray
+				colorpath = cel.getElementById(entry);      //path to be recolored
+				if(simil){                                  //this is true if the similar-button was pressed and false if the variants button was pressed 
 					colorpath.style.fill = similar(entry);  //similar will check designated source svg to get starting values
 				}else{
-					colorpath.style.fill = randomrgb();  //randomrgb will check sliders to get random ranges
+					colorpath.style.fill = randomrgb();     //randomrgb will check sliders to get random ranges
 				}
 			});
-			inputdiv = document.createElement("div");  //div for colorpickers to have them besides svg
-			inputdiv.className = "leftflow";           //makes everything flow left which looks nice and it arranges itself to the windowsize
-			picdiv = document.createElement("div");		//div for picture to add eventlistener to
+			inputdiv = document.createElement("div");       //div for colorpickers to have them besides svg
+			inputdiv.className = "leftflow";                //makes everything flow left which looks nice and it arranges itself to the windowsize
+			picdiv = document.createElement("div");         //div for picture to add eventlistener to
 			picdiv.className = "leftflow";
-			svgdiv = document.createElement("div");  //div for svg and inputdiv to keep svg besides its colorpickers
+			svgdiv = document.createElement("div");         //div for svg and inputdiv to keep svg besides its colorpickers
 			svgdiv.className = "leftflow";
 			// add eventlistener to svg element cel
 			if(picdiv.addEventListener){
@@ -229,19 +229,19 @@ window.onload = function() {
 			} else {
 				picdiv.attachEvent("click", svgclick);
 			}
-			pdest.appendChild(svgdiv);                //This part will look like this: destclone{ svgdiv[ picdiv() inputdiv() ] }
+			pdest.appendChild(svgdiv);               //This part will look like this: destclone{ svgdiv[ picdiv() inputdiv() ] }
 			picdiv.appendChild(cel);                                                   
 			svgdiv.appendChild(picdiv);                                           
 			svgdiv.appendChild(inputdiv);             
-			list = document.createElement("UL");      //ul-element for list of inputs created in makecolorpickers
+			list = document.createElement("UL");     //ul-element for list of inputs created in makecolorpickers
 			list.id = "list"+ cel.id;
 			inputdiv.appendChild(list);
 			label=document.createElement("LI");      //first list node, the one with the label
 			labeltext = document.createTextNode(cel.id); //text for first list node
 			label.appendChild(labeltext);
 			list.appendChild(label);
-			makecolorpickers(cel);                     //now it will look like this: destclone{ svgdiv[ picdiv( cel) inputdiv( ul{ Li}) ] }
-		};                                             //makecolorpickers will add more li-elements with colorpickers in them to ul 
+			makecolorpickers(cel);                    //now it will look like this: destclone{ svgdiv[ picdiv( cel) inputdiv( ul{ Li}) ] }
+		};                                            //makecolorpickers will add more li-elements with colorpickers in them to ul 
 	}
 	
 	//opens colorpicker in new tab
