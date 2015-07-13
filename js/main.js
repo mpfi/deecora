@@ -4,13 +4,13 @@ window.onload = function() {
 
   //Local Scope
   (function () {
-    // Save
-    'use strict';
+	// Save
+	'use strict';
     
-    // VAR
-    var xhr=null,                 //XMLHttpRequest
+	// VAR
+	var xhr=null,                 //XMLHttpRequest
 		xhr2 =null, xhr3=null, xhr4=null, //multiples, 1 for each file to load
-        bEl, // tmp Button Element Variable can be used several times
+		bEl, // tmp Button Element Variable can be used several times
 		buttonActionRandomcolors, //callback function for Button random colors
 		buttonActionSimilar,      //callback function for Button Similar    
 		buttonActionNewTab,       //callback function for Button NewTab
@@ -19,7 +19,7 @@ window.onload = function() {
 		svgclick,                 //callback function for click on generated svg (those below the buttons and sliders)
 		patharray=[];             //list of existing path-IDs
 
-    // Functions
+	// Functions
 	//fetch similar rgb , ignores sliders. Value in SVG is hex or rgb
 	function similar(pathNR){ 
 		var startpic = document.getElementById("origsvg"+document.getElementById("target").value).firstChild; //origsvgX is div containing original svg 
@@ -130,7 +130,7 @@ window.onload = function() {
 		xhr4.open("GET","media/colibri.svg");
 		xhr4.send("");
 		//////////##################copy end                            copied part end
-    }
+	}
 	
 	//make color picker list, append pickers as li-elements to ul from randomcolors(), is called once per svg-variant generated
 	function makecolorpickers(cel){  
@@ -155,24 +155,24 @@ window.onload = function() {
 			document.getElementById("list"+cel.id).appendChild(liEl); //find element with ID listcurrentSVG, which is container ul for colorpickers and append li element
 			liEl.appendChild(input);                       //append colorpicker to li element                           
 		});
-    }
+	}
 
-   function fillpatharray(el){    //Make array of pathnames, checks only from 0 to 100
-      var fi = 0;                 //counter, if paths start at high numbers (inkcscape) put this to lowest path number
-      var arraypath;
-      var arraypos =0;           
-      var tmp = [];               //array to be filled  
-      while (fi < 100) {          // if highest path number bigger than 100 increase this number
-          arraypath = "path" + fi.toString(); //create ID to test
-          //only get path if path exists, else skip
-          if(el.getElementById(arraypath) != null){ //el is sourceSVG from randomcolors()
-            tmp[arraypos]=arraypath;          //save existing ID in array
-            arraypos++;
-          }
-      fi++;
-      }
-      return tmp;
-    } 
+	function fillpatharray(el){    //Make array of pathnames, checks only from 0 to 100
+		var fi = 0;                 //counter, if paths start at high numbers (inkcscape) put this to lowest path number
+		var arraypath;
+		var arraypos =0;           
+		var tmp = [];               //array to be filled  
+		while (fi < 100) {          // if highest path number bigger than 100 increase this number
+			arraypath = "path" + fi.toString(); //create ID to test
+			//only get path if path exists, else skip
+			if(el.getElementById(arraypath) != null){ //el is sourceSVG from randomcolors()
+				tmp[arraypos]=arraypath;          //save existing ID in array
+				arraypos++;
+			}
+		fi++;
+		}
+		return tmp;
+	} 
 
 	//Randomize colors
 	function randomcolors(target, simil){ /*patharray drawing.svg = ["path1", "path2", "path3", "path5"]; */
@@ -250,34 +250,34 @@ window.onload = function() {
 		var svg_blob = new Blob([serializer.serializeToString(document.getElementById(cloneID))],{'type': "image/svg+xml"});
 		var url = URL.createObjectURL(svg_blob);
 		var svg_win = window.open(url, "svg_win");
-    }
+	}
 
     // Callback-Functions
 	buttonActionRandomcolors=function(event){
-      if ( event.preventDefault ) { event.preventDefault();}
-         event.returnValue = false;  
-         randomcolors(document.getElementById("target").value, false); //false because this is not the similar chain, this is the sliders chain
-    };
+		if ( event.preventDefault ) { event.preventDefault();}
+		event.returnValue = false;  
+		randomcolors(document.getElementById("target").value, false); //false because this is not the similar chain, this is the sliders chain
+	};
 	buttonActionSimilar=function(event){
-      if ( event.preventDefault ) { event.preventDefault();}
-         event.returnValue = false;  
-         randomcolors(document.getElementById("target").value, true); //true because this is the similar chain and not the sliders chain
-    };
+		if ( event.preventDefault ) { event.preventDefault();}
+		event.returnValue = false;  
+		randomcolors(document.getElementById("target").value, true); //true because this is the similar chain and not the sliders chain
+	};
 	buttonActionNewTab=function(event){                               //new tab version started by button
-      if ( event.preventDefault ) { event.preventDefault();}
-         event.returnValue = false;  
-         show_svg("picture"+document.getElementById("nrOfCopies").value);
-    };
+		if ( event.preventDefault ) { event.preventDefault();}
+		event.returnValue = false;  
+		show_svg("picture"+document.getElementById("nrOfCopies").value);
+	};
 	buttonActionNewTabTOP=function(event){                             //Variant for new tab by clicking on svg in top row
-      if ( event.preventDefault ) { event.preventDefault();}
-         event.returnValue = false;
-         show_svg(event.target.parentNode.id);                         //could be used for other clicked stuff but the other svg have a different click behavior, svgclick
-    };
-    colorbuttonhandler=function(event){                                //gets added to colorpickers
-      var tmp = event.target.id.split("_");
-      // 1 SVG ID , 0 Path ID
-      document.getElementById(tmp[1]).getElementById(tmp[0]).style.fill=event.target.value;
-    };
+		if ( event.preventDefault ) { event.preventDefault();}
+		event.returnValue = false;
+		show_svg(event.target.parentNode.id);                         //could be used for other clicked stuff but the other svg have a different click behavior, svgclick
+	};
+	colorbuttonhandler=function(event){                                //gets added to colorpickers
+		var tmp = event.target.id.split("_");
+		// 1 SVG ID , 0 Path ID
+		document.getElementById(tmp[1]).getElementById(tmp[0]).style.fill=event.target.value;
+	};
 	svgclick=function(event){
 		var tmp = event.target.parentNode.id;                          //Needs mouse aiming to occupied image areas otherwise target is not an svg-path element and bug starts
 		var tmpID = document.getElementById("origsvg"+document.getElementById("target").value).firstChild.id;
@@ -288,52 +288,52 @@ window.onload = function() {
 		var newsvg = document.getElementById(tmp).cloneNode(true);
 		newsvg.id = tmpID;                                             //use ID of the old svg
 		oldsvg.appendChild(newsvg);
-    };
+	};
 
-    // Event-Listeners 
+	// Event-Listeners 
 	bEl = document.getElementById("bRandomcolors");
-    if(bEl.addEventListener){
-                 bEl.addEventListener("click", buttonActionRandomcolors);
-    } else {
-        bEl.attachEvent("click", buttonActionRandomcolors);
-    }
+	if(bEl.addEventListener){
+		bEl.addEventListener("click", buttonActionRandomcolors);
+	} else {
+		bEl.attachEvent("click", buttonActionRandomcolors);
+	}
 	bEl = document.getElementById("bSimilar");
-    if(bEl.addEventListener){
-                 bEl.addEventListener("click", buttonActionSimilar);
-    } else {
-        bEl.attachEvent("click", buttonActionSimilar);
-    }
+	if(bEl.addEventListener){
+		bEl.addEventListener("click", buttonActionSimilar);
+	} else {
+		bEl.attachEvent("click", buttonActionSimilar);
+	}
 	bEl = document.getElementById("bNewTab");
-    if(bEl.addEventListener){
-                 bEl.addEventListener("click", buttonActionNewTab);
-    } else {
-        bEl.attachEvent("click", buttonActionNewTab);
+	if(bEl.addEventListener){
+		bEl.addEventListener("click", buttonActionNewTab);
+	} else {
+		bEl.attachEvent("click", buttonActionNewTab);
     }
 	bEl = document.getElementById("origsvg1");
-    if(bEl.addEventListener){
-                 bEl.addEventListener("click", buttonActionNewTabTOP);
-    } else {
-        bEl.attachEvent("click", buttonActionNewTabTOP);
-    }
+	if(bEl.addEventListener){
+		bEl.addEventListener("click", buttonActionNewTabTOP);
+	} else {
+		bEl.attachEvent("click", buttonActionNewTabTOP);
+	}
 	bEl = document.getElementById("origsvg2");
-    if(bEl.addEventListener){
-                 bEl.addEventListener("click", buttonActionNewTabTOP);
-    } else {
-        bEl.attachEvent("click", buttonActionNewTabTOP);
-    }
+	if(bEl.addEventListener){
+		bEl.addEventListener("click", buttonActionNewTabTOP);
+	} else {
+		bEl.attachEvent("click", buttonActionNewTabTOP);
+	}
 	bEl = document.getElementById("origsvg3");
-    if(bEl.addEventListener){
-                 bEl.addEventListener("click", buttonActionNewTabTOP);
-    } else {
-        bEl.attachEvent("click", buttonActionNewTabTOP);
-    }
+	if(bEl.addEventListener){
+		bEl.addEventListener("click", buttonActionNewTabTOP);
+	} else {
+		bEl.attachEvent("click", buttonActionNewTabTOP);
+	}
 	bEl = document.getElementById("origsvg4");
-    if(bEl.addEventListener){
-                 bEl.addEventListener("click", buttonActionNewTabTOP);
-    } else {
-        bEl.attachEvent("click", buttonActionNewTabTOP);
-    }
-    // Start here
+	if(bEl.addEventListener){
+		bEl.addEventListener("click", buttonActionNewTabTOP);
+	} else {
+		bEl.attachEvent("click", buttonActionNewTabTOP);
+	}
+	// Start here
 	loadimages();
   })();
 };
