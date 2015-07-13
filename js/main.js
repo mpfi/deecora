@@ -79,10 +79,10 @@ window.onload = function() {
 		xhr.onreadystatechange=function(){
 			if((xhr.readyState==4)&&(xhr.status==200)){
 				var el = document.getElementById("origsvg1");
-				while (el.firstChild) {                                            //while there is a first child node
-					el.removeChild(el.firstChild);                                 // delete it to get rid of old stuff
+				while (el.firstChild) {                             //while there is a first child node
+					el.removeChild(el.firstChild);                  //delete it to get rid of old stuff
 				}
-				el.appendChild(xhr.responseXML.documentElement);                    //put newly loaded svg there
+				el.appendChild(xhr.responseXML.documentElement);    //put newly loaded svg there
 			}
 		};
 
