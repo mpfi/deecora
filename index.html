@@ -2,7 +2,7 @@
 <html> 
 <head> 
 <meta charset="UTF-8">
-<title>SVGTest</title>
+<title>DeECoRa</title>
 <link rel="stylesheet" href="css/main.css">
 
 </head>
@@ -10,65 +10,66 @@
 <h1>DeECoRa</h1>
 
 <div id="origsvg1" class="leftflow">
-	<!-- here goes the SVG 1 -->
+  <!-- here goes the SVG 1 -->
 </div>
 <div id="origsvg2" class="leftflow">
-	<!-- here goes the SVG 2 -->
+  <!-- here goes the SVG 2 -->
 </div>
 <div id="origsvg3" class="leftflow">
-	<!-- here goes the SVG 3 -->
+  <!-- here goes the SVG 3 -->
 </div>
 <div id="origsvg4" class="leftflow">
-	<!-- here goes the SVG 4 -->
+  <!-- here goes the SVG 4 -->
 </div>
 <br style="clear:both" />
-<label for="number">select picture #:</label>
+<p>Clicking any of these figures opens them in a new tab. </p>
+<label for="number">select figure #:</label>
 <input id="target" type="number" min="1" value="1" max="4" step="1"/>
-		<ul id="sliders" style="display:">
-			<form oninput="amount.value=rangeInput.value"> hue min
-				<input type="range" id="huemin" value="0" name="rangeInput" min="0" max="360">                                                       
+    <ul id="sliders" style="display:">
+      <form oninput="amount.value=rangeInput.value"> hue min
+        <input type="range" id="huemin" value="0" name="rangeInput" min="0" max="360">                                                       
 
-				<output name="amount" for="rangeInput">0</output>
-			</form>
-			<form oninput="amount.value=rangeInput.value"> hue max
-				<input type="range" id="huemax" value="360" name="rangeInput" min="0" max="360">                                                       
+        <output name="amount" for="rangeInput">0</output>
+      </form>
+      <form oninput="amount.value=rangeInput.value"> hue max
+        <input type="range" id="huemax" value="360" name="rangeInput" min="0" max="360">                                                       
 
-				<output name="amount" for="rangeInput">0</output>
-			</form>
-			<form oninput="amount.value=rangeInput.value"> sat min %
-				<input type="range" id="satmin" value="0" name="rangeInput" min="0" max="100">                                                       
+        <output name="amount" for="rangeInput">360</output>
+      </form>
+      <form oninput="amount.value=rangeInput.value"> sat min %
+        <input type="range" id="satmin" value="0" name="rangeInput" min="0" max="100">                                                       
 
-				<output name="amount" for="rangeInput">0</output>
-			</form>
-			<form oninput="amount.value=rangeInput.value"> sat max %
-				<input type="range" id="satmax" value="100" name="rangeInput" min="0" max="100">                                                       
+        <output name="amount" for="rangeInput">0</output>
+      </form>
+      <form oninput="amount.value=rangeInput.value"> sat max %
+        <input type="range" id="satmax" value="100" name="rangeInput" min="0" max="100">                                                       
 
-				<output name="amount" for="rangeInput">0</output>
-			</form>
-			<form oninput="amount.value=rangeInput.value"> lumo min %
-				<input type="range" id="lumin" value="0" name="rangeInput" min="0" max="100">                                                       
+        <output name="amount" for="rangeInput">100</output>
+      </form>
+      <form oninput="amount.value=rangeInput.value"> lumo min %
+        <input type="range" id="lumin" value="0" name="rangeInput" min="0" max="100">                                                       
 
-				<output name="amount" for="rangeInput">0</output>
-			</form>
-			<form oninput="amount.value=rangeInput.value"> lumo max %
-				<input type="range" id="lumax" value="100" name="rangeInput" min="0" max="100">                                                       
+        <output name="amount" for="rangeInput">0</output>
+      </form>
+      <form oninput="amount.value=rangeInput.value"> lumo max %
+        <input type="range" id="lumax" value="100" name="rangeInput" min="0" max="100">                                                       
 
-				<output name="amount" for="rangeInput">0</output>
-			</form>
-		</ul> 
+        <output name="amount" for="rangeInput">100</output>
+      </form>
+    </ul> 
 <br>
-<button id="bNewTab"> open Nr. X in new tab</button>
+<label for="number">Amount of variants:</label>
 <input id="nrOfCopies" type="number" min="1" value="4" max="10" step="1"/>
-<button id="bRandomcolors"> generate X variants</button> <button id="bSimilar"> generate X similar variants</button>
+<button id="bRandomcolors"> generate random variants</button> <button id="bSimilar"> generate similar variants</button>
 <br>
-<br>
+<p>Clicking any of the figures below replaces the selected upper figure with the clicked figure. </p>
 <br>
 
 <div id="copy_svg" class="table">
-	<div class="row">
-	   <div id="dest_clone" class="leftflow">
-	   </div>
-	</div>
+  <div class="row">
+     <div id="dest_clone" class="leftflow">
+     </div>
+  </div>
 </div>
 <script src="js/chroma.min.js"></script>
 <script src="js/main.js"></script>
