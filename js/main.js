@@ -1,5 +1,5 @@
 
-// After Page is load
+// After Page is loaded
 window.onload = function() {
 
   //Local Scope
